@@ -1,5 +1,7 @@
 const axios = require('axios')
 const userAgents = require('user-agents')
+const HttpsProxyAgent = require('https-proxy-agent')
+const SocksProxyAgent = require('socks-proxy-agent')
 const _ = require('lodash')
 
 class Service {
@@ -7,6 +9,37 @@ class Service {
     this.name = 'insta-stories.ru'
     this.piority = 2
     this.axios = axios.create()
+  }
+
+  setProxy (proxy) {
+    let httpAgent
+    if (proxy && proxy.host && proxy.port) {
+      let { protocol } = proxy
+      if (protocol === undefined) {
+        protocol = 'http'
+      }
+      if (proxy.auth && proxy.auth.user && proxy.auth.pass) {
+        if (protocol.startsWith('http')) {
+          httpAgent = new HttpsProxyAgent(`${protocol}://${proxy.auth.user}:${proxy.auth.pass}@${proxy.host}:${proxy.port}`)
+        } else if (protocol.startsWith('socks')) {
+          httpAgent = new SocksProxyAgent(`${protocol}://${proxy.auth.user}:${proxy.auth.pass}@${proxy.host}:${proxy.port}`)
+        }
+      } else {
+        if (protocol.startsWith('http')) {
+          httpAgent = new HttpsProxyAgent(`${protocol}://${proxy.host}:${proxy.port}`)
+        } else if (protocol.startsWith('socks')) {
+          httpAgent = new SocksProxyAgent(`${protocol}://${proxy.host}:${proxy.port}`)
+        }
+      }
+    } else if (proxy && proxy.match(/:\/\//)) {
+      if (proxy.startsWith('http')) {
+        httpAgent = new HttpsProxyAgent(proxy)
+      } else if (proxy.startsWith('socks')) {
+        httpAgent = new SocksProxyAgent(proxy)
+      }
+    }
+    this.axios.defaults.httpAgent = this.axios.defaults.httpsAgent = httpAgent
+    return this
   }
 
   get (username) {
