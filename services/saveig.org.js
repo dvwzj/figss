@@ -1,5 +1,7 @@
 const axios = require('axios')
 const userAgents = require('user-agents')
+const HttpsProxyAgent = require('https-proxy-agent')
+const SocksProxyAgent = require('socks-proxy-agent')
 const _ = require('lodash')
 const { JSDOM } = require('jsdom')
 const jsdom = new JSDOM

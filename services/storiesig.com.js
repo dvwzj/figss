@@ -1,5 +1,7 @@
 const axios = require('axios')
 const userAgents = require('user-agents')
+const HttpsProxyAgent = require('https-proxy-agent')
+const SocksProxyAgent = require('socks-proxy-agent')
 
 class Service {
   constructor () {
