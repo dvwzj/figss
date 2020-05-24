@@ -1,6 +1,6 @@
 {
   "name": "figss",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Free IG Story Services",
   "main": "index.js",
   "scripts": {
