@@ -57,6 +57,7 @@ class Service {
             }
           )
           .then((res) => {
+            // console.log('res.data', res.data)
             const matches = res.data.match(/src="(main\.(.*?)\.js)"/)
             if (matches) {
               this
@@ -70,6 +71,7 @@ class Service {
                   }
                 )
                 .then((res2) => {
+                  // console.log('res2.data', res2.data)
                   const matches2 = res2.data.match(/this\.xTrip="(.*?)"/)
                   if (matches2) {
                     this
@@ -82,12 +84,13 @@ class Service {
                         },
                         {
                           headers: {
-                            'user-agent': userAgent
+                            'user-agent': userAgent,
+                            // origin: 'https://insta-stories.ru'
                           }
                         }
                       )
                       .then((res3) => {
-                        // console.log('res3.data', res3.data)
+                        console.log('res3.data', res3.data)
                         const user = {
                           friendship_status: {
                             blocking: undefined,
@@ -187,7 +190,10 @@ class Service {
                           items
                         })
                       })
-                      .catch(reject)
+                      .catch((e) => {
+                        console.error(e)
+                        reject(e)
+                      })
                   } else {
                     reject(`Service "${this.name}" not available (cannot get x-trip)`)
                   }
