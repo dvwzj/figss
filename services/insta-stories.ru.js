@@ -85,7 +85,7 @@ class Service {
                         {
                           headers: {
                             'user-agent': userAgent,
-                            // origin: 'https://insta-stories.ru'
+                            origin: 'https://insta-stories.ru'
                           }
                         }
                       )
