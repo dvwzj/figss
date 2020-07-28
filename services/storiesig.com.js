@@ -48,7 +48,7 @@ class Service {
         this
           .axios
           .get(
-            `https://api.storiesig.com/stories/${username}`,
+            `https://storiesig.com/stories/${username}`,
             {
               headers: {
                 'user-agent': userAgent
@@ -56,7 +56,30 @@ class Service {
             }
           )
           .then((res) => {
-            resolve(res.data)
+            const match = res.data.match(/"buildId":"(.*?)"/)
+            if (match) {
+              const buildId = match[1]
+              this
+                .axios
+                .get(
+                  `https://storiesig.com/_next/data/${buildId}/stories/${username}.json`,
+                  {
+                    headers: {
+                      'user-agent': userAgent
+                    }
+                  }
+                )
+                .then((res2) => {
+                  try {
+                    resolve(res2.data.pageProps.stories)
+                  } catch (e) {
+                    reject(e)
+                  }
+                })
+                .catch(reject)
+            } else {
+              reject(new Error('buildId not found'))
+            }
           })
           .catch(reject)
       } catch (e) {
